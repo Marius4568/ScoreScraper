@@ -1,18 +1,7 @@
-# .gitignore
 
-# Ignore node_modules
-node_modules/
-
-# Ignore logs
-*.log
-
-# Ignore environment files
-.env
-
-# Ignore any build or distribution folders
-dist/
-build/
-
-# Ignore any OS-specific files
-.DS_Store
-Thumbs.db
+# yarn v2
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+.pnp.*
