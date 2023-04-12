@@ -1,6 +1,7 @@
 const axios = require("axios");
 const cheerio = require("cheerio");
-const fs = require('fs')
+const { dateRange } = require("./utils/dateUtils");
+const { outputCSV } = require("./utils/csvUtils");
 
 const scrapeNBAScores = async (date) => {
   try {
@@ -47,27 +48,18 @@ const scrapeNBAScores = async (date) => {
   }
 };
 
-const allDayScores = [];
-
-const getCurrentDate = () => {
-  const today = new Date();
-  const month = String(today.getMonth() + 1).padStart(2, '0');
-  const day = String(today.getDate()).padStart(2, '0');
-  return day;
-};
-
-const getAllDayScores = async (year, month, fromDate, toDate ) => {
-  console.log('Start')
-  const dateArr = ['20230401', '20230408'];
+const getAllDayScores = async (fromDate, toDate ) => {
+  const dateArr = dateRange(fromDate, toDate);
   const allDayScores = await Promise.all(dateArr.map(async (date) => {
     const result = await scrapeNBAScores(date);
     return {
       date,
-      result
+      result: JSON.stringify(result)
     };
   }));
-  console.log(allDayScores[1].result[0])
-  console.log('End')
+  console.log(allDayScores)
+
+outputCSV(allDayScores)
 }
 
-getAllDayScores();
+getAllDayScores('20230315','20230318');
