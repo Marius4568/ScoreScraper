@@ -49,14 +49,20 @@ const scrapeNBAScores = async (date) => {
 
 const allDayScores = [];
 
-const forLoop = async _ => {
+const getCurrentDate = () => {
+  const today = new Date();
+  const month = String(today.getMonth() + 1).padStart(2, '0');
+  const day = String(today.getDate()).padStart(2, '0');
+  return day;
+};
+
+const getAllDayScores = async (year, month, fromDate, toDate ) => {
   console.log('Start')
-  const days = [1,2,3,4,5,6,7,8,9,10,11];
-  const allDayScores = await Promise.all(days.map(async (day) => {
-    const date = `202304${String(day).padStart(2, '0')}`;
+  const dateArr = ['20230401', '20230408'];
+  const allDayScores = await Promise.all(dateArr.map(async (date) => {
     const result = await scrapeNBAScores(date);
     return {
-      day,
+      date,
       result
     };
   }));
@@ -64,60 +70,4 @@ const forLoop = async _ => {
   console.log('End')
 }
 
-forLoop();
-
-
-
-
-
-
-
-
-
-// const asyncCall = async (item) => {
-//   // Your async function logic here
-//   console.log(`Async call for item: ${item}`);
-//   return new Promise((resolve) => {
-//     setTimeout(() => {
-//       resolve(`Processed item: ${item}`);
-//     }, 1000);
-//   });
-// };
-
-// async function processItems() {
-//   const items = Array.from({ length: 10 }, (_, i) => i + 1);
-//   const results = await Promise.all(items.map(async (item) => await asyncCall(item)));
-//   console.log('All async calls are completed:', results);
-// }
-
-// processItems();
-
-
-// const asyncCall = async (item) => {
-//   // Your async function logic here
-//   console.log(`Async call for item: ${item}`);
-//   return new Promise((resolve) => {
-//     setTimeout(() => {
-//       resolve(`Processed item: ${item}`);
-//     }, 1000);
-//   });
-// };
-
-// async function processItems() {
-//   const items = Array.from({ length: 10 }, (_, i) => i + 1);
-//   const results = await Promise.all(items.map(async (item) => await asyncCall(item)));
-//   console.log('All async calls are completed:', results);
-// }
-
-// processItems();
-
-// for(let i = 1; i < 11; i++) {
-//   scrapeNBAScores(`202304${String(i).padStart(2, '0')}`).then((res) => {
-// console.log(res)
-//   }) 
-
-// }
-
-
-
-
+getAllDayScores();
