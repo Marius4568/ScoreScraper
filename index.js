@@ -63,3 +63,5 @@ outputCSV(allDayScores)
 }
 
 getAllDayScores('20230315','20230318');
+
+module.exports = { scrapeNBAScores, getAllDayScores };
