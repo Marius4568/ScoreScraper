@@ -1,6 +1,17 @@
 const fs = require('fs')
 
 function formatCSV(data) {
+  // if (!Array.isArray(data)) {
+  //   console.error('Data is not an array:', data);
+  //   return '';
+  // }`
+  console.log(`data: ${JSON.stringify(data)}`)
+
+  if (!Array.isArray(data)) {
+    console.error('Data is not an array:', data);
+    return '';
+  }
+
     const header = "Date,Team 1,Score 1,Team 2,Score 2\n";
     let csv = header;
   

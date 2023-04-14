@@ -1,7 +1,13 @@
 const axios = require("axios");
 const cheerio = require("cheerio");
+const express = require("express");
+const cors = require("cors");
+const {Readable} = require("stream");
+const fastcsv = require("fast-csv");
 const { dateRange } = require("./utils/dateUtils");
-const { outputCSV } = require("./utils/csvUtils");
+
+const app = express();
+app.use(cors());
 
 const scrapeNBAScores = async (date) => {
   try {
@@ -57,11 +63,32 @@ const getAllDayScores = async (fromDate, toDate ) => {
       result: JSON.stringify(result)
     };
   }));
-  console.log(allDayScores)
-
-outputCSV(allDayScores)
+  return allDayScores
 }
 
-getAllDayScores('20230315','20230318');
+app.get("/scrape", async (req, res) => {
+  const startDate = req.query.startdate;
+  const endDate = req.query.enddate;
+
+  if (!startDate || !endDate) {
+    return res.status(400).send("Both startDate and endDate are required!")
+  }
+
+  try {
+    const data = await getAllDayScores(startDate, endDate);
+    const readableStream = Readable.from(data);
+
+    res.setHeader('Content-Type', 'text/csv');
+    res.setHeader('Content-Disposition', 'attachment; filename=output.csv');
+
+    readableStream.pipe(fastcsv.format({headers: true})).pipe(res)
+  } catch (err) {
+    console.log(err);
+    return res.status(500).send(`server error: ${err.message}`)
+  }
+})
+
+const PORT = 4000;
+app.listen(PORT, () => console.log(`server is running on ${PORT}`))
 
 module.exports = { scrapeNBAScores, getAllDayScores };
