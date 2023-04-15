@@ -2,8 +2,6 @@ const axios = require("axios");
 const cheerio = require("cheerio");
 const express = require("express");
 const cors = require("cors");
-const {Readable} = require("stream");
-const fastcsv = require("fast-csv");
 const { dateRange } = require("./utils/dateUtils");
 
 const app = express();
@@ -34,7 +32,7 @@ const scrapeNBAScores = async (date) => {
       $(element)
         .find(".ScoreCell__Score")
         .each((i, scoreElem) => {
-        scores.push($(scoreElem).text());
+          scores.push($(scoreElem).text());
         });
 
       games.push({
@@ -54,7 +52,7 @@ const scrapeNBAScores = async (date) => {
   }
 };
 
-const getAllDayScores = async (fromDate, toDate ) => {
+const getAllDayScores = async (fromDate, toDate) => {
   const dateArr = dateRange(fromDate, toDate);
   const allDayScores = await Promise.all(dateArr.map(async (date) => {
     const result = await scrapeNBAScores(date);
@@ -76,12 +74,7 @@ app.get("/scrape", async (req, res) => {
 
   try {
     const data = await getAllDayScores(startDate, endDate);
-    const readableStream = Readable.from(data);
-
-    res.setHeader('Content-Type', 'text/csv');
-    res.setHeader('Content-Disposition', 'attachment; filename=output.csv');
-
-    readableStream.pipe(fastcsv.format({headers: true})).pipe(res)
+    res.status(200).send(JSON.stringify(data))
   } catch (err) {
     console.log(err);
     return res.status(500).send(`server error: ${err.message}`)
