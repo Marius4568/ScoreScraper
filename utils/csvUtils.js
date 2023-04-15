@@ -1,10 +1,6 @@
 const fs = require('fs')
 
 function formatCSV(data) {
-  // if (!Array.isArray(data)) {
-  //   console.error('Data is not an array:', data);
-  //   return '';
-  // }`
   console.log(`data: ${JSON.stringify(data)}`)
 
   if (!Array.isArray(data)) {
