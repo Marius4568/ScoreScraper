@@ -16,3 +16,5 @@ build/
 # Ignore any OS-specific files
 .DS_Store
 Thumbs.db
+
+.csv
